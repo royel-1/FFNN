@@ -1,0 +1,57 @@
+
+# Practical 2: Feedforward Neural Network
+
+# 1. Import libraries
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense, Flatten
+
+# 2. Load MNIST dataset
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+# 3. Normalize data
+x_train = x_train / 255.0
+x_test = x_test / 255.0
+
+# 4. Define the model
+model = Sequential([
+    Flatten(input_shape=(28, 28)),
+    Dense(128, activation='relu'),
+    Dense(10, activation='softmax')
+])
+
+# 5. Compile the model using SGD
+model.compile(
+    optimizer='sgd',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# 6. Train the model
+history = model.fit(
+    x_train, y_train,
+    epochs=5,
+    validation_data=(x_test, y_test)
+)
+
+# 7. Evaluate the model
+loss, accuracy = model.evaluate(x_test, y_test)
+
+print("Test Loss:", loss)
+print("Test Accuracy:", accuracy)
+
+# 8. Plot training loss
+plt.plot(history.history['loss'])
+plt.title('Training Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.show()
+
+# 9. Plot training accuracy
+plt.plot(history.history['accuracy'])
+plt.title('Training Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.show()
